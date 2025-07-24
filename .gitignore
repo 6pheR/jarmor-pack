@@ -1,0 +1,63 @@
+# === Rust build artifacts ===
+/target/
+**/*.rs.bk
+
+# === Cargo ===
+/Cargo.lock
+/.cargo/
+.cargo/config.toml
+
+# === IntelliJ / CLion / Rust plugin ===
+.idea/
+*.iml
+*.iws
+
+# === VSCode ===
+.vscode/
+*.code-workspace
+
+# === Sublime Text ===
+*.sublime-project
+*.sublime-workspace
+
+# === Vim & Emacs ===
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# === Backup / temp files ===
+*.tmp
+*.bak
+*.old
+*.orig
+
+# === OS generated files ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === Logs ===
+*.log
+
+# === Binary / Encrypted outputs ===
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.enc
+
+# === Test / coverage artifacts ===
+/coverage/
+/*.profraw
+/*.gcno
+/*.gcda
+/*.gcov
+
+# === Environment / config ===
+.env
+.env.*
+*.local
