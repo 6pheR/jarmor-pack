@@ -1,0 +1,62 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions/setup-rust@v2
+        with:
+          rust-version: stable
+
+      - name: Build project
+        run: cargo build --release
+
+      - name: Rename binary
+        run: |
+          BIN_NAME="jarmor-pack"
+          EXT=""
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            EXT=".exe"
+          fi
+          mv target/release/$BIN_NAME$EXT $BIN_NAME-${{ matrix.os }}$EXT
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jarmor-pack-${{ matrix.os }}
+          path: jarmor-pack-${{ matrix.os }}*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          files: artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
